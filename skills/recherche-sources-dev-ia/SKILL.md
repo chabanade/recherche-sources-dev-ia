@@ -1,9 +1,10 @@
 ---
 name: recherche-sources-dev-ia
-version: "0.1.0"
-status: draft
+version: "0.2.0"
+status: validated
 last-updated: "2026-05-26"
 changelog: |
+  0.2.0 (2026-05-26) - Itération post-test Meydeey. Deux garde-fous ajoutés : (1) date de consultation YYYY-MM-DD forcée dans le format de sortie obligatoire ; (2) si Claude cite une source qui n'est pas dans les fichiers references/*.md, il doit le signaler explicitement avec un drapeau [HORS-SKILL, à vérifier]. Piège 6 ajouté (ajout spontané de sources hors-référence, ex MMTEB cité sans cross-check). Checklist d'auto-discipline renforcée.
   0.1.0 (2026-05-26) - Creation initiale, issue Meydeey workshop-01 du 25/05 14:15. Skill cohorte generique Dev + IA. Skill metier Tesla a venir en v2.
 description: >
   This skill should be used when Mehdi or any cohort member searches for dev/AI resources, repos, forum threads, papers, models or trends. Triggers on phrases like "cherche un repo GitHub", "trouve un repo", "thread Reddit sur LLM", "post r/LocalLLaMA", "forum OpenAI", "community OpenAI", "papier arXiv", "Hugging Face model", "leaderboard MTEB", "tendance IA recente", "veille IA", "Stack Overflow tag claude", "exemple LangChain", "benchmark embedding", "trouve une source", "ou je peux chercher". Centralise 30+ sources high-signal avec templates de requete copiables et pieges connus.
@@ -109,33 +110,59 @@ Pourquoi : sans filtres, les resultats sont satures de contenu bas signal (blogs
 
 ## Apres la recherche
 
-### Citer la source
+### Citer la source (format OBLIGATOIRE)
 
-Format standard a coller dans le doc/commit/message :
+Format standard a coller dans le doc/commit/message — **la date de consultation est obligatoire**, pas optionnelle :
 
 ```markdown
-Source : [Titre court](URL canonique) — site/auteur, date YYYY-MM-DD, confiance XX%.
+Source : [Titre court](URL canonique) — site/auteur, publié YYYY-MM-DD, **consulté le YYYY-MM-DD** (= aujourd'hui), confiance XX%.
 ```
 
 Exemple :
 ```markdown
-Source : [GitHub thedotmack/claude-mem](https://github.com/thedotmack/claude-mem) — release v13.3.0 du 21/05/2026, confiance 75% (repo recent, stars eleves, pas encore teste en interne).
+Source : [GitHub thedotmack/claude-mem](https://github.com/thedotmack/claude-mem) — release v13.3.0, publié 21/05/2026, **consulté le 2026-05-26**, confiance 75% (repo recent, stars eleves, pas encore teste en interne).
 ```
 
-INTERDIT : citer "j'ai vu sur Reddit que..." sans URL ni date.
-A LA PLACE : copier l'URL exacte du post + date + flair/auteur.
+INTERDIT : citer une URL sans date de consultation. Les sites web changent (deprecation, removal, modif silencieuse), un lien sans date = traçabilité cassée.
+A LA PLACE : toujours inclure `consulté le YYYY-MM-DD` à côté de l'URL. Si la date du jour n'est pas connue, utiliser la variable `${TODAY}` et la résoudre via l'environnement.
 
-### Verifier avant d'agir
+INTERDIT : citer "j'ai vu sur Reddit que..." sans URL ni date.
+A LA PLACE : copier l'URL exacte du post + date publication + date consultation + flair/auteur.
+
+### Garde-fou anti-ajout-hors-skill (NOUVEAU V0.2.0)
+
+INTERDIT : ajouter spontanément une source qui n'est PAS dans les fichiers `references/*.md` du skill sans le signaler.
+
+A LA PLACE : si tu juges qu'une source pertinente manque dans la référence (exemple typique : tu connais MMTEB / Massive Multilingual TEB et tu veux l'ajouter en complément de MTEB), tu DOIS :
+1. Préfixer l'entrée avec **`[HORS-SKILL, à vérifier]`**
+2. Indiquer que cette source ne figure pas dans le fichier référence chargé
+3. Recommander explicitement à l'utilisateur de la vérifier sur arXiv / site officiel avant citation finale
+4. Proposer de l'ajouter au skill (version mineure suivante) si elle s'avère solide
+
+Exemple correct :
+```markdown
+**Source 4 — MMTEB (Massive Multilingual TEB)** — [HORS-SKILL, à vérifier]
+URL : https://arxiv.org/abs/2502.13595 (à confirmer)
+Confiance par défaut : non documentée dans le skill (probablement 80% si Enevoldsen et al., mais à recroiser sur arXiv avant citation)
+```
+
+Pourquoi : le skill a été construit pour cadrer le périmètre. Toute source hors-périmètre est une hallucination potentielle même si elle est plausible. Le bloc explicite empêche l'utilisateur de prendre pour acquis ce qui est en réalité une suggestion non-vérifiée.
+
+### Verifier avant d'agir (checklist OBLIGATOIRE)
 
 Application du skill `verite-anti-hallucination` :
 
 ```
 [ ] URL canonique recopiee (pas un raccourci bit.ly)
-[ ] Date de la source notee
-[ ] Niveau de confiance estime
+[ ] Date de publication notee (si disponible)
+[ ] Date de CONSULTATION notee (= aujourd'hui, OBLIGATOIRE)
+[ ] Niveau de confiance estime (par défaut du skill ou ajusté avec justification)
 [ ] Source recroisee si confiance < 80%
 [ ] Aucune affirmation factuelle non sourcee
+[ ] Toute source HORS-SKILL est explicitement marquée [HORS-SKILL, à vérifier]
 ```
+
+Si une case n'est pas cochable, ne pas livrer la sortie. Refaire la recherche.
 
 ### Sauvegarder une trouvaille reutilisable
 
@@ -176,6 +203,16 @@ A LA PLACE : croiser avec Papers with Code (paperswithcode.com) ou chercher le r
 
 INTERDIT : ouvrir un blog "Top 10 best LLM frameworks 2026" qui sent le SEO.
 A LA PLACE : aller direct au repo cite, ou rester sur les sources canoniques de la table.
+
+### Piege 6 : Ajout spontane d'une source hors-skill (V0.2.0)
+
+INTERDIT : ajouter une reference plausible mais qui ne figure pas dans les fichiers `references/*.md` sans le signaler.
+
+Exemple reel survenu au test V0.1.0 : sur la requete `MTEB benchmark`, Claude a ajoute spontanement une reference a **MMTEB (Massive Multilingual TEB, Enevoldsen et al.)** qui n'etait PAS dans `references/sources-recherche-ia.md`. Plausible (MMTEB existe vraiment), mais c'est typiquement le genre d'ajout qui contourne le skill et bascule sur la connaissance pre-entrainee, donc potentiel hallucination.
+
+A LA PLACE : si la source est dans le skill, la citer normalement. Si elle n'y est pas, la flagger `[HORS-SKILL, à vérifier]` (cf section "Garde-fou anti-ajout-hors-skill" plus haut) et inviter l'utilisateur a recroiser avant citation finale.
+
+Pourquoi : le perimetre du skill est volontairement restreint pour eviter la salade Google. Le sortir sans le dire annule l'interet du skill.
 
 ---
 

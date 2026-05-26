@@ -85,8 +85,12 @@ Test : `/recherche-sources MTEB benchmark`
 
 ## Statut & versions
 
+- **v0.2.0 validated** (26/05/2026) — itération post-test Meydeey. Deux garde-fous ajoutés :
+  - **Date de consultation `YYYY-MM-DD` obligatoire** dans le format de sortie (avant : optionnelle, donc oubliée). La traçabilité web sans date est inutilisable à 3 mois.
+  - **Drapeau `[HORS-SKILL, à vérifier]`** : si Claude cite une source pertinente mais qui n'est pas dans les fichiers `references/*.md`, il doit explicitement la signaler et inviter à recroiser avant citation finale. Évite que la connaissance pré-entraînée contourne silencieusement le périmètre du skill (cas réel V0.1.0 : ajout spontané de MMTEB non sourcé sur une requête MTEB).
+  - Ajout du **Piège 6** documentant ce cas dans le SKILL.md.
 - **v0.1.0 draft** (26/05/2026) — création initiale, 5 catégories, 30+ sources.
-- **v0.2.0 prévue** : forcer la date de consultation dans le format de sortie, garde-fou contre l'ajout de sources hors-skill.
+- **v0.3.0 prévue** : skill métier Tesla Electric (PV, PAC, Eurocode, Rexel, normes électriques FR).
 
 ---
 
