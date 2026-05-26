@@ -5,7 +5,7 @@ status: validated
 last-updated: "2026-05-26"
 changelog: |
   0.2.0 (2026-05-26) - Itération post-test Meydeey. Deux garde-fous ajoutés : (1) date de consultation YYYY-MM-DD forcée dans le format de sortie obligatoire ; (2) si Claude cite une source qui n'est pas dans les fichiers references/*.md, il doit le signaler explicitement avec un drapeau [HORS-SKILL, à vérifier]. Piège 6 ajouté (ajout spontané de sources hors-référence, ex MMTEB cité sans cross-check). Checklist d'auto-discipline renforcée.
-  0.1.0 (2026-05-26) - Creation initiale, issue Meydeey workshop-01 du 25/05 14:15. Skill cohorte generique Dev + IA. Skill metier Tesla a venir en v2.
+  0.1.0 (2026-05-26) - Creation initiale, issue Meydeey workshop-01 du 25/05 14:15. Skill cohorte generique Dev + IA.
 description: >
   This skill should be used when Mehdi or any cohort member searches for dev/AI resources, repos, forum threads, papers, models or trends. Triggers on phrases like "cherche un repo GitHub", "trouve un repo", "thread Reddit sur LLM", "post r/LocalLLaMA", "forum OpenAI", "community OpenAI", "papier arXiv", "Hugging Face model", "leaderboard MTEB", "tendance IA recente", "veille IA", "Stack Overflow tag claude", "exemple LangChain", "benchmark embedding", "trouve une source", "ou je peux chercher". Centralise 30+ sources high-signal avec templates de requete copiables et pieges connus.
 ---

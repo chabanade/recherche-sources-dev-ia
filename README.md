@@ -90,7 +90,6 @@ Test : `/recherche-sources MTEB benchmark`
   - **Drapeau `[HORS-SKILL, à vérifier]`** : si Claude cite une source pertinente mais qui n'est pas dans les fichiers `references/*.md`, il doit explicitement la signaler et inviter à recroiser avant citation finale. Évite que la connaissance pré-entraînée contourne silencieusement le périmètre du skill (cas réel V0.1.0 : ajout spontané de MMTEB non sourcé sur une requête MTEB).
   - Ajout du **Piège 6** documentant ce cas dans le SKILL.md.
 - **v0.1.0 draft** (26/05/2026) — création initiale, 5 catégories, 30+ sources.
-- **v0.3.0 prévue** : skill métier Tesla Electric (PV, PAC, Eurocode, Rexel, normes électriques FR).
 
 ---
 
